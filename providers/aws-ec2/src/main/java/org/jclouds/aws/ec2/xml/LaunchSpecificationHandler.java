@@ -124,9 +124,13 @@ public class LaunchSpecificationHandler extends HandlerForGeneratedRequestWithRe
       } else if (qName.equals("ramdiskId")) {
          builder.ramdiskId(currentOrNull());
       } else if (qName.equals("enabled")) {
-         String monitoringEnabled = currentOrNull();
-         if (monitoringEnabled != null)
-            builder.monitoringEnabled(Boolean.valueOf(monitoringEnabled));
+           String monitoringEnabled = currentOrNull();
+           if (monitoringEnabled != null)           {
+              builder.monitoringEnabled(Boolean.valueOf(monitoringEnabled));}
+      }else if (qName.equals("publicIpAddressAssociated")) {
+           String publicIpAddressAssociated = currentOrNull();
+           if (publicIpAddressAssociated != null)
+              builder.publicIpAddressAssociated(Boolean.valueOf(publicIpAddressAssociated));
       }
       currentText = new StringBuilder();
    }

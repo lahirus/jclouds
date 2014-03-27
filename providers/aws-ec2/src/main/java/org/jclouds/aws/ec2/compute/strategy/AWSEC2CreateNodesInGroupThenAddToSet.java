@@ -97,6 +97,7 @@ public class AWSEC2CreateNodesInGroupThenAddToSet extends EC2CreateNodesInGroupT
          AWSEC2TemplateOptions awsOptions = AWSEC2TemplateOptions.class.cast(template.getOptions());
          LaunchSpecification spec = AWSRunInstancesOptions.class.cast(instanceOptions).getLaunchSpecificationBuilder()
                .imageId(template.getImage().getProviderId()).availabilityZone(zone).subnetId(awsOptions.getSubnetId())
+                 .publicIpAddressAssociated(awsOptions.isPublicIpAddressAssociated())
                .iamInstanceProfileArn(awsOptions.getIAMInstanceProfileArn())
                .iamInstanceProfileName(awsOptions.getIAMInstanceProfileName()).build();
          RequestSpotInstancesOptions options = awsOptions.getSpotOptions();
