@@ -16,16 +16,15 @@
  */
 package org.jclouds.aws.ec2.options;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.Set;
-
+import com.google.common.collect.ImmutableSet;
 import org.jclouds.aws.ec2.domain.LaunchSpecification;
 import org.jclouds.ec2.domain.BlockDeviceMapping;
 import org.jclouds.ec2.options.RunInstancesOptions;
 import org.jclouds.rest.annotations.SinceApiVersion;
 
-import com.google.common.collect.ImmutableSet;
+import java.util.Set;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Contains options supported in the Form API for the RunInstances operation. <h2>
@@ -70,6 +69,18 @@ public class AWSRunInstancesOptions extends RunInstancesOptions {
       return this;
    }
 
+
+    /**
+     * Associate public ip for the instance
+     */
+   public AWSRunInstancesOptions associatePublicIpAddressAndSubnetId(String subnetId) {
+       formParameters.put("NetworkInterface.0.DeviceIndex", "0");
+       formParameters.put("NetworkInterface.0.AssociatePublicIpAddress", "true");
+       formParameters.put("NetworkInterface.0.SubnetId", checkNotNull(subnetId, "subnetId"));
+       launchSpecificationBuilder.publicIpAddressAssociated(true);
+       return this;
+   }
+
    /**
     * Specifies the subnet ID within which to launch the instance(s) for Amazon Virtual Private
     * Cloud.
@@ -89,8 +100,19 @@ public class AWSRunInstancesOptions extends RunInstancesOptions {
       return this;
    }
 
+
+   public AWSRunInstancesOptions withSecurityGroupIdsForNetworkInterface(Iterable<String> securityGroupIds) {
+      launchSpecificationBuilder.securityGroupIds(securityGroupIds);
+      indexFormValuesWithPrefix("NetworkInterface.0.SecurityGroupId", securityGroupIds);
+      return this;
+   }
+
    public AWSRunInstancesOptions withSecurityGroupIds(String... securityGroupIds) {
       return withSecurityGroupIds(ImmutableSet.copyOf(securityGroupIds));
+   }
+
+   public AWSRunInstancesOptions withSecurityGroupIdsForNetworkInterface(String... securityGroupIds) {
+      return withSecurityGroupIdsForNetworkInterface(ImmutableSet.copyOf(securityGroupIds));
    }
 
    /**
@@ -98,7 +120,7 @@ public class AWSRunInstancesOptions extends RunInstancesOptions {
     * 
     * @see org.jclouds.aws.ec2.domain.AWSRunningInstance#getIAMInstanceProfile()
     */
-   @SinceApiVersion("2012-06-01")
+   @SinceApiVersion("2014-02-01")
    public AWSRunInstancesOptions withIAMInstanceProfileArn(String arn) {
       formParameters.put("IamInstanceProfile.Arn", checkNotNull(arn, "arn"));
       return this;
@@ -109,7 +131,7 @@ public class AWSRunInstancesOptions extends RunInstancesOptions {
     * 
     * @see org.jclouds.aws.ec2.domain.AWSRunningInstance#getIAMInstanceProfile()
     */
-   @SinceApiVersion("2012-06-01")
+   @SinceApiVersion("2014-02-01")
    public AWSRunInstancesOptions withIAMInstanceProfileName(String name) {
       formParameters.put("IamInstanceProfile.Name", checkNotNull(name, "name"));
       return this;

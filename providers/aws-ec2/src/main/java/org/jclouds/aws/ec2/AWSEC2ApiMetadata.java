@@ -16,11 +16,8 @@
  */
 package org.jclouds.aws.ec2;
 
-import static org.jclouds.ec2.reference.EC2Constants.PROPERTY_EC2_AMI_OWNERS;
-
-import java.net.URI;
-import java.util.Properties;
-
+import com.google.common.collect.ImmutableSet;
+import com.google.inject.Module;
 import org.jclouds.aws.ec2.compute.AWSEC2ComputeServiceContext;
 import org.jclouds.aws.ec2.compute.config.AWSEC2ComputeServiceContextModule;
 import org.jclouds.aws.ec2.config.AWSEC2HttpApiModule;
@@ -28,8 +25,10 @@ import org.jclouds.ec2.EC2ApiMetadata;
 import org.jclouds.ec2.compute.config.EC2ResolveImagesModule;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.inject.Module;
+import java.net.URI;
+import java.util.Properties;
+
+import static org.jclouds.ec2.reference.EC2Constants.PROPERTY_EC2_AMI_OWNERS;
 
 public final class AWSEC2ApiMetadata extends BaseHttpApiMetadata<AWSEC2Api> {
 
@@ -59,7 +58,7 @@ public final class AWSEC2ApiMetadata extends BaseHttpApiMetadata<AWSEC2Api> {
    public static final class Builder extends BaseHttpApiMetadata.Builder<AWSEC2Api, Builder> {
       public Builder() {
          id("aws-ec2")
-         .version("2012-06-01")
+         .version("2014-02-01")
          .name("Amazon-specific EC2 API")
          .identityName("Access Key ID")
          .credentialName("Secret Access Key")

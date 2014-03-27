@@ -16,9 +16,8 @@
  */
 package org.jclouds.aws.ec2.features;
 
-import static com.google.common.collect.Iterables.getOnlyElement;
-import static org.testng.Assert.assertEquals;
-
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.ImmutableSet;
 import org.jclouds.aws.ec2.AWSEC2Api;
 import org.jclouds.aws.ec2.compute.internal.BaseAWSEC2ComputeServiceExpectTest;
 import org.jclouds.aws.ec2.domain.SpotInstanceRequest;
@@ -26,8 +25,8 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.ImmutableSet;
+import static com.google.common.collect.Iterables.getOnlyElement;
+import static org.testng.Assert.assertEquals;
 
 /**
  * @author Andrew Bayer
@@ -41,11 +40,11 @@ public class SpotInstanceApiExpectTest extends BaseAWSEC2ComputeServiceExpectTes
            .addFormParam("Action", "DescribeSpotInstanceRequests")
            .addFormParam("Filter.1.Name", "instance-id")
            .addFormParam("Filter.1.Value.1", "i-ef308e8e")
-           .addFormParam("Signature", "wQtGpumMCDEzvlldKepCKeEjD9iE7eAyiRBlQztcJMA%3D")
+           .addFormParam("Signature", "M4wqA0OGm%2BNgKatZdB80udvU3gsTFKTGyvNA7Qf9isg%3D")
            .addFormParam("SignatureMethod", "HmacSHA256")
            .addFormParam("SignatureVersion", "2")
            .addFormParam("Timestamp", "2012-04-16T15%3A54%3A08.897Z")
-           .addFormParam("Version", "2012-06-01")
+           .addFormParam("Version", "2014-02-01")
            .addFormParam("AWSAccessKeyId", "identity").build();
 
    public void testFilterWhenResponseIs2xx() {

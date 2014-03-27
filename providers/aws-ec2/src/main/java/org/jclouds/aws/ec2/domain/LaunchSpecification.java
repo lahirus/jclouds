@@ -16,14 +16,11 @@
  */
 package org.jclouds.aws.ec2.domain;
 
-import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Objects.toStringHelper;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.common.base.Objects;
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSortedSet;
 import org.jclouds.ec2.domain.BlockDeviceMapping;
 import org.jclouds.ec2.domain.BlockDeviceMapping.MapEBSSnapshotToDevice;
 import org.jclouds.ec2.domain.BlockDeviceMapping.MapEphemeralDeviceToDevice;
@@ -31,11 +28,13 @@ import org.jclouds.ec2.domain.BlockDeviceMapping.MapNewVolumeToDevice;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.rest.annotations.SinceApiVersion;
 
-import com.google.common.base.Objects;
-import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSortedSet;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Set;
+
+import static com.google.common.base.Objects.equal;
+import static com.google.common.base.Objects.toStringHelper;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * 
@@ -60,6 +59,7 @@ public class LaunchSpecification {
       protected String subnetId;
       protected String ramdiskId;
       protected Boolean monitoringEnabled;
+      protected Boolean publicIpAddressAssociated;
       protected ImmutableSet.Builder<BlockDeviceMapping> blockDeviceMappings = ImmutableSet
             .builder();
       protected ImmutableSet.Builder<String> securityGroupIds = ImmutableSet.builder();
@@ -78,6 +78,7 @@ public class LaunchSpecification {
          subnetId = null;
          ramdiskId = null;
          monitoringEnabled = false;
+         publicIpAddressAssociated = false;
          blockDeviceMappings = ImmutableSet.builder();
          securityGroupIds = ImmutableSet.builder();
          securityGroupNames = ImmutableSet.builder();
@@ -107,6 +108,12 @@ public class LaunchSpecification {
          return this;
       }
 
+
+      public Builder publicIpAddressAssociated(Boolean publicIpAddressAssociated) {
+        this.publicIpAddressAssociated = publicIpAddressAssociated;
+        return this;
+      }
+
       public Builder instanceType(String instanceType) {
          this.instanceType = instanceType;
          return this;
@@ -131,7 +138,7 @@ public class LaunchSpecification {
          this.subnetId = subnetId;
          return this;
       }
-      
+
       public Builder ramdiskId(String ramdiskId) {
          this.ramdiskId = ramdiskId;
          return this;
@@ -219,7 +226,7 @@ public class LaunchSpecification {
             iamInstanceProfile = Optional.absent();
          }
          return new LaunchSpecification(instanceType, imageId, kernelId, ramdiskId, availabilityZone, subnetId,
-               keyName, securityGroupIdToNames.build(), blockDeviceMappings.build(), monitoringEnabled,
+               keyName, securityGroupIdToNames.build(), blockDeviceMappings.build(), monitoringEnabled, publicIpAddressAssociated,
                securityGroupIds.build(), securityGroupNames.build(), userData, iamInstanceProfile);
       }
 
@@ -230,7 +237,7 @@ public class LaunchSpecification {
                .keyName(in.getKeyName()).securityGroupIdToNames(in.getSecurityGroupIdToNames())
                .securityGroupIds(in.getSecurityGroupIds()).securityGroupNames(in.getSecurityGroupNames())
                .blockDeviceMappings(in.getBlockDeviceMappings()).monitoringEnabled(in.isMonitoringEnabled())
-               .userData(in.getUserData());
+               .publicIpAddressAssociated(in.publicIpAddressAssociated).userData(in.getUserData());
          if (in.getIAMInstanceProfile().isPresent()) {
             builder.iamInstanceProfileArn(in.getIAMInstanceProfile().get().getArn().orNull());
             builder.iamInstanceProfileName(in.getIAMInstanceProfile().get().getName().orNull());
@@ -251,14 +258,16 @@ public class LaunchSpecification {
    protected final Set<String> securityGroupIds;
    protected final Set<String> securityGroupNames;
    protected final Boolean monitoringEnabled;
+   protected final Boolean publicIpAddressAssociated;
    protected final byte[] userData;
    protected final Optional<IAMInstanceProfileRequest> iamInstanceProfile;
 
    public LaunchSpecification(String instanceType, String imageId, String kernelId, String ramdiskId,
          String availabilityZone, String subnetId, String keyName, Map<String, String> securityGroupIdToNames,
-         Iterable<? extends BlockDeviceMapping> blockDeviceMappings, Boolean monitoringEnabled,
+         Iterable<? extends BlockDeviceMapping> blockDeviceMappings, Boolean monitoringEnabled, Boolean publicIpAddressAssociated,
          Set<String> securityGroupIds, Set<String> securityGroupNames, byte[] userData,
          Optional<IAMInstanceProfileRequest> iamInstanceProfile) {
+      this.publicIpAddressAssociated = publicIpAddressAssociated;
       this.instanceType = checkNotNull(instanceType, "instanceType");
       this.imageId = checkNotNull(imageId, "imageId");
       this.kernelId = kernelId;
@@ -291,6 +300,14 @@ public class LaunchSpecification {
     */
    public Boolean isMonitoringEnabled() {
       return monitoringEnabled;
+   }
+
+
+   /**
+    * Public ip address associated
+    */
+   public Boolean isPublicIpAddressAssociated() {
+      return publicIpAddressAssociated;
    }
 
    /**
@@ -368,7 +385,7 @@ public class LaunchSpecification {
    /**
     * The IAM Instance Profile (IIP) associated with the instance.
     */
-   @SinceApiVersion("2012-06-01")
+   @SinceApiVersion("2014-02-01")
    public Optional<IAMInstanceProfileRequest> getIAMInstanceProfile() {
       return iamInstanceProfile;
    }
@@ -439,11 +456,16 @@ public class LaunchSpecification {
       } else if (!keyName.equals(other.keyName))
          return false;
       if (monitoringEnabled == null) {
-         if (other.monitoringEnabled != null)
+            if (other.monitoringEnabled != null)
+               return false;
+         } else if (!monitoringEnabled.equals(other.monitoringEnabled))
             return false;
-      } else if (!monitoringEnabled.equals(other.monitoringEnabled))
-         return false;
-      if (ramdiskId == null) {
+      if (publicIpAddressAssociated == null) {
+            if (other.publicIpAddressAssociated != null)
+               return false;
+         } else if (!publicIpAddressAssociated.equals(other.publicIpAddressAssociated))
+            return false;
+       if (ramdiskId == null) {
          if (other.ramdiskId != null)
             return false;
       } else if (!ramdiskId.equals(other.ramdiskId))
@@ -487,7 +509,7 @@ public class LaunchSpecification {
             + ", iamInstanceProfile=" + iamInstanceProfile.orNull() + "]";
    }
 
-   @SinceApiVersion("2012-06-01")
+   @SinceApiVersion("2014-02-01")
    public static class IAMInstanceProfileRequest {
 
       public static IAMInstanceProfileRequest forArn(String arn) {

@@ -16,6 +16,19 @@
  */
 package org.jclouds.reflect;
 
+import com.google.common.annotations.Beta;
+import com.google.common.base.Function;
+import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableList;
+import com.google.common.reflect.Invokable;
+import com.google.common.reflect.TypeToken;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import static com.google.common.base.Objects.equal;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -25,19 +38,6 @@ import static com.google.common.collect.Iterables.all;
 import static org.jclouds.reflect.Reflection2.method;
 import static org.jclouds.reflect.Reflection2.typeToken;
 import static org.jclouds.util.Throwables2.propagateIfPossible;
-
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import com.google.common.annotations.Beta;
-import com.google.common.base.Function;
-import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableList;
-import com.google.common.reflect.Invokable;
-import com.google.common.reflect.TypeToken;
 
 /**
  * Static utilities relating to functional Java reflection.

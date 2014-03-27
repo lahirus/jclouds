@@ -16,24 +16,22 @@
  */
 package org.jclouds.aws.ec2.binders;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.inject.Singleton;
-
+import com.google.common.base.Function;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
+import com.google.common.collect.Multimaps;
 import org.jclouds.aws.ec2.domain.LaunchSpecification;
 import org.jclouds.aws.ec2.domain.LaunchSpecification.IAMInstanceProfileRequest;
 import org.jclouds.aws.ec2.options.AWSRunInstancesOptions;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.rest.Binder;
 
-import com.google.common.base.Function;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMap.Builder;
-import com.google.common.collect.Multimaps;
+import javax.inject.Singleton;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * 
@@ -65,8 +63,17 @@ public class BindLaunchSpecificationToFormParams implements Binder, Function<Lau
       if (launchSpec.getSecurityGroupIds().size() > 0)
          options.withSecurityGroupIds(launchSpec.getSecurityGroupIds());
       options.asType(checkNotNull(launchSpec.getInstanceType(), "instanceType"));
-      if (launchSpec.getSubnetId() != null)
-         options.withSubnetId(launchSpec.getSubnetId());
+      if (launchSpec.getSubnetId() != null){
+         if (Boolean.TRUE.equals(launchSpec.isPublicIpAddressAssociated()))  {
+            options.associatePublicIpAddressAndSubnetId(launchSpec.getSubnetId());
+            if (launchSpec.getSecurityGroupIds().size() > 0){
+                options.withSecurityGroupIdsForNetworkInterface(launchSpec.getSecurityGroupIds());
+            }
+         }
+         else{
+             options.withSubnetId(launchSpec.getSubnetId());
+         }
+      }
       if (launchSpec.getKernelId() != null)
          options.withKernelId(launchSpec.getKernelId());
       if (launchSpec.getKeyName() != null)
