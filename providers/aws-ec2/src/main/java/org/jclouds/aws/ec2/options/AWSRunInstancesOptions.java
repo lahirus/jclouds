@@ -27,7 +27,6 @@ import org.jclouds.rest.annotations.SinceApiVersion;
 
 import com.google.common.collect.ImmutableSet;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Contains options supported in the Form API for the RunInstances operation. <h2>
