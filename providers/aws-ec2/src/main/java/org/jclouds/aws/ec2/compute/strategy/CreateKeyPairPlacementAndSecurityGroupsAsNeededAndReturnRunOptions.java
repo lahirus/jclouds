@@ -182,18 +182,18 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions 
       String subnetId = awsTemplateOptions.getSubnetId();
       boolean associatePublicIpAddress = awsTemplateOptions.isPublicIpAddressAssociated();
       if (subnetId != null) {
-          if(associatePublicIpAddress){
-              AWSRunInstancesOptions.class.cast(instanceOptions).associatePublicIpAddressAndSubnetId(subnetId);
-              if (awsTemplateOptions.getGroupIds().size() > 0)
-                 awsInstanceOptions.withSecurityGroupIdsForNetworkInterface(awsTemplateOptions.getGroupIds());
-          }else{
-              AWSRunInstancesOptions.class.cast(instanceOptions).withSubnetId(subnetId);
-              if (awsTemplateOptions.getGroupIds().size() > 0)
-                 awsInstanceOptions.withSecurityGroupIds(awsTemplateOptions.getGroupIds());
-          }
+         if (associatePublicIpAddress) {
+             AWSRunInstancesOptions.class.cast(instanceOptions).associatePublicIpAddressAndSubnetId(subnetId);
+             if (awsTemplateOptions.getGroupIds().size() > 0)
+                awsInstanceOptions.withSecurityGroupIdsForNetworkInterface(awsTemplateOptions.getGroupIds());
+         } else {
+             AWSRunInstancesOptions.class.cast(instanceOptions).withSubnetId(subnetId);
+             if (awsTemplateOptions.getGroupIds().size() > 0)
+                awsInstanceOptions.withSecurityGroupIds(awsTemplateOptions.getGroupIds());
+         }
       } else {
-          if (awsTemplateOptions.getGroupIds().size() > 0)
-             awsInstanceOptions.withSecurityGroupIds(awsTemplateOptions.getGroupIds());
+         if (awsTemplateOptions.getGroupIds().size() > 0)
+            awsInstanceOptions.withSecurityGroupIds(awsTemplateOptions.getGroupIds());
          super.addSecurityGroups(region, group, template, instanceOptions);
       }
    }

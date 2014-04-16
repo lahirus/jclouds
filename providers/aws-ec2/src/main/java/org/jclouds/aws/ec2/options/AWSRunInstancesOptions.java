@@ -122,7 +122,7 @@ public class AWSRunInstancesOptions extends RunInstancesOptions {
     * 
     * @see org.jclouds.aws.ec2.domain.AWSRunningInstance#getIAMInstanceProfile()
     */
-   @SinceApiVersion("2014-02-01")
+   @SinceApiVersion("2012-06-01")
    public AWSRunInstancesOptions withIAMInstanceProfileArn(String arn) {
       formParameters.put("IamInstanceProfile.Arn", checkNotNull(arn, "arn"));
       return this;
@@ -133,7 +133,7 @@ public class AWSRunInstancesOptions extends RunInstancesOptions {
     * 
     * @see org.jclouds.aws.ec2.domain.AWSRunningInstance#getIAMInstanceProfile()
     */
-   @SinceApiVersion("2014-02-01")
+   @SinceApiVersion("2012-06-01")
    public AWSRunInstancesOptions withIAMInstanceProfileName(String name) {
       formParameters.put("IamInstanceProfile.Name", checkNotNull(name, "name"));
       return this;

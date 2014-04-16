@@ -386,7 +386,7 @@ public class LaunchSpecification {
    /**
     * The IAM Instance Profile (IIP) associated with the instance.
     */
-   @SinceApiVersion("2014-02-01")
+   @SinceApiVersion("2012-06-01")
    public Optional<IAMInstanceProfileRequest> getIAMInstanceProfile() {
       return iamInstanceProfile;
    }
@@ -462,11 +462,11 @@ public class LaunchSpecification {
          } else if (!monitoringEnabled.equals(other.monitoringEnabled))
             return false;
       if (publicIpAddressAssociated == null) {
-            if (other.publicIpAddressAssociated != null)
-               return false;
+         if (other.publicIpAddressAssociated != null)
+            return false;
          } else if (!publicIpAddressAssociated.equals(other.publicIpAddressAssociated))
             return false;
-       if (ramdiskId == null) {
+      if (ramdiskId == null) {
          if (other.ramdiskId != null)
             return false;
       } else if (!ramdiskId.equals(other.ramdiskId))
@@ -510,7 +510,7 @@ public class LaunchSpecification {
             + ", iamInstanceProfile=" + iamInstanceProfile.orNull() + "]";
    }
 
-   @SinceApiVersion("2014-02-01")
+   @SinceApiVersion("2012-06-01")
    public static class IAMInstanceProfileRequest {
 
       public static IAMInstanceProfileRequest forArn(String arn) {
