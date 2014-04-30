@@ -65,14 +65,25 @@ public class BindLaunchSpecificationToFormParamsTest {
             "LaunchSpecification.ImageId", "ami-123", "LaunchSpecification.SecurityGroupId.1", "sid-foo"));
    }
 
-   @Test
-   public void testApplyWithSubnetId() throws UnknownHostException {
-      LaunchSpecification spec = LaunchSpecification.builder().instanceType(InstanceType.T1_MICRO).imageId("ami-123")
-            .subnetId("subnet-xyz").build();
+    @Test
+    public void testApplyWithSubnetId() throws UnknownHostException {
+       LaunchSpecification spec = LaunchSpecification.builder().instanceType(InstanceType.T1_MICRO).imageId("ami-123")
+             .subnetId("subnet-xyz").build();
 
-      assertEquals(binder.apply(spec), ImmutableMap.of("LaunchSpecification.InstanceType", "t1.micro",
-            "LaunchSpecification.ImageId", "ami-123", "LaunchSpecification.SubnetId", "subnet-xyz"));
-   }
+       assertEquals(binder.apply(spec), ImmutableMap.of("LaunchSpecification.InstanceType", "t1.micro",
+             "LaunchSpecification.ImageId", "ami-123", "LaunchSpecification.SubnetId", "subnet-xyz"));
+    }
+
+    @Test
+    public void testApplyWithSubnetIdAnsPublicIpAssociation() throws UnknownHostException {
+       LaunchSpecification spec = LaunchSpecification.builder().instanceType(InstanceType.T1_MICRO).imageId("ami-123")
+             .subnetId("subnet-xyz").publicIpAddressAssociated(true).build();
+
+       assertEquals(binder.apply(spec), ImmutableMap.of("LaunchSpecification.InstanceType", "t1.micro",
+             "LaunchSpecification.ImageId", "ami-123", "LaunchSpecification.NetworkInterface.0.DeviceIndex", "0",
+             "LaunchSpecification.NetworkInterface.0.AssociatePublicIpAddress", "true",
+             "LaunchSpecification.NetworkInterface.0.SubnetId", "subnet-xyz"));
+    }
 
    @Test
    public void testApplyWithIAMInstanceProfileArn() {
