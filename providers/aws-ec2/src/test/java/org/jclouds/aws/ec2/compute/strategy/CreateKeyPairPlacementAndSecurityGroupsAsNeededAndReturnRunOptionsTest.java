@@ -824,44 +824,6 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
       verifyStrategy(strategy);
    }
 
-   public void testCreateNewSecurityGroups(){
-
-      // setup constants
-      String region = Region.AP_SOUTHEAST_1;
-      String group = "group";
-      String generatedMarkerGroup = "jclouds#group";
-      Set<String> groupNames = ImmutableSet.<String> of();
-      int[] ports = { 22, 80 };
-      boolean shouldAuthorizeSelf = true;
-      Set<String> returnVal = ImmutableSet.<String> of(generatedMarkerGroup);
-
-      // create mocks
-      CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions strategy = setupStrategy();
-      AWSEC2TemplateOptions options = createMock(AWSEC2TemplateOptions.class);
-
-      Template template = createMock(Template.class);
-
-      // setup expectations
-      expect(options.getGroupIds()).andReturn(ImmutableSet.<String> of());
-      expect(options.getGroups()).andReturn(groupNames).atLeastOnce();
-      expect(options.getInboundPorts()).andReturn(ports).atLeastOnce();
-      RegionNameAndIngressRules regionNameAndIngressRules = new RegionNameAndIngressRules(region, generatedMarkerGroup,
-            ports, shouldAuthorizeSelf);
-      expect(strategy.securityGroupMap.getUnchecked(regionNameAndIngressRules)).andReturn(generatedMarkerGroup);
-
-      // replay mocks
-      replay(options);
-      replayStrategy(strategy);
-
-      // run
-
-       RunInstancesOptions customize = strategy.execute(region, group, template);
-      assertEquals(strategy.addSecurityGroups(region, group, template, customize), returnVal);
-
-      // verify mocks
-      verify(options);
-      verifyStrategy(strategy);
-   }
    public void testCreateNewPlacementGroupUnlessUserSpecifiedOtherwise_reusesKeyWhenToldTo() {
       // setup constants
       String region = Region.AP_SOUTHEAST_1;
