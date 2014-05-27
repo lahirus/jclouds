@@ -125,7 +125,7 @@ public class LaunchSpecificationHandler extends HandlerForGeneratedRequestWithRe
          builder.ramdiskId(currentOrNull());
       } else if (qName.equals("enabled")) {
          String monitoringEnabled = currentOrNull();
-         if (monitoringEnabled != null)           {
+         if (monitoringEnabled != null) {
             builder.monitoringEnabled(Boolean.valueOf(monitoringEnabled));}
       }else if (qName.equals("publicIpAddressAssociated")) {
          String publicIpAddressAssociated = currentOrNull();

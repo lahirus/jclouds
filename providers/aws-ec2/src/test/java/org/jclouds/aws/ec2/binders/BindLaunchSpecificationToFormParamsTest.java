@@ -75,7 +75,7 @@ public class BindLaunchSpecificationToFormParamsTest {
     }
 
     @Test
-    public void testApplyWithSubnetIdAnsPublicIpAssociation() throws UnknownHostException {
+    public void testApplyWithSubnetIdAndPublicIpAssociation() throws UnknownHostException {
        LaunchSpecification spec = LaunchSpecification.builder().instanceType(InstanceType.T1_MICRO).imageId("ami-123")
              .subnetId("subnet-xyz").publicIpAddressAssociated(true).build();
 
